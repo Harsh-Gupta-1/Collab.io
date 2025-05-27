@@ -1,3 +1,5 @@
+// Room.jsx
+
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getRoom } from "../api/roomAPI";
@@ -184,7 +186,7 @@ export default function Room() {
     );
 
   return (
-    <div className="h-screen w-screen bg-white text-gray-800 font-inter">
+    <div className="h-screen w-screen bg-white text-gray-800 font-inter overflow-hidden">
       <Navbar
         roomId={id}
         roomName={roomName}
@@ -195,61 +197,56 @@ export default function Room() {
         onLeave={handleLeave}
       />
 
-      <div className="h-[calc(100vh-64px)]">
-        {mode === "whiteboard" && (
-          <div className="flex h-full">
-            <div className="flex-1 w-full h-full">
-              <Whiteboard
-                roomId={id}
-                socket={socketRef.current}
-                canvasStateRef={canvasStateRef}
-              />
+      <div className="h-[calc(100vh-64px)] p-2 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+        {mode === "whiteboard" || mode === "code" ? (
+          <div className="flex h-full overflow-hidden">
+            <div className="flex-1 h-full relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-lg" />
+              <div className="relative h-full bg-white rounded-lg shadow-sm border border-gray-200/50 overflow-hidden">
+                {mode === "whiteboard" ? (
+                  <Whiteboard
+                    roomId={id}
+                    socket={socketRef.current}
+                    canvasStateRef={canvasStateRef}
+                  />
+                ) : (
+                  <CodeEditor
+                    code={codeSnippet}
+                    onChange={handleCodeChange}
+                    onExecute={handleExecute}
+                    output={output}
+                    roomId={id}
+                  />
+                )}
+              </div>
             </div>
-            <ChatPanel
+            <div className="w-[300px] h-full relative">
+              <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/20 via-purple-500/20 to-blue-500/20 rounded-lg" />
+              <div className="relative h-full bg-white rounded-lg shadow-sm border border-gray-200/50 overflow-hidden flex flex-col">
+                <ChatPanel
+                  roomId={id}
+                  user={userName}
+                  onSendMessage={handleSendMessage}
+                  messages={messages}
+                  userCount={userCount}
+                  participants={participants}
+                  isConnected={isConnected}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="h-full">
+            <SplitView
               roomId={id}
+              codeSnippet={codeSnippet}
+              canvasStateRef={canvasStateRef}
+              onCodeChange={handleCodeChange}
+              onExecute={handleExecute}
+              output={output}
               user={userName}
-              onSendMessage={handleSendMessage}
-              messages={messages}
-              userCount={userCount}
-              participants={participants}
-              isConnected={isConnected}
             />
           </div>
-        )}
-
-        {mode === "code" && (
-          <div className="flex h-full">
-            <div className="flex-1">
-              <CodeEditor
-                code={codeSnippet}
-                onChange={handleCodeChange}
-                onExecute={handleExecute}
-                output={output}
-                roomId={id}
-              />
-            </div>
-            <ChatPanel
-              roomId={id}
-              user={userName}
-              onSendMessage={handleSendMessage}
-              messages={messages}
-              userCount={userCount}
-              participants={participants}
-              isConnected={isConnected}
-            />
-          </div>
-        )}
-
-        {mode === "split" && (
-          <SplitView
-            roomId={id}
-            codeSnippet={codeSnippet}
-            canvasStateRef={canvasStateRef}
-            onCodeChange={handleCodeChange}
-            onExecute={handleExecute}
-            output={output}
-            user={userName}
-          />
         )}
       </div>
 

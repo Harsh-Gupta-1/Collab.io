@@ -225,7 +225,7 @@ export default function CodeEditor({
       </div>
 
       {!hideTerminal && (
-        <div className="h-[40%] bg-gradient-to-b from-slate-50 to-slate-100 border-t border-slate-200/60">
+        <div className="h-[30%] bg-gradient-to-b from-slate-50 to-slate-100 border-t border-slate-200/60">
           <Terminal output={output} />
         </div>
       )}
