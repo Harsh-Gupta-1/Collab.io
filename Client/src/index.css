@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+.tldraw__editor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.tldraw__ui__menu {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* Ensure toolbar is above other elements */
+}
+
+.tldraw__canvas {
+  width: 100%;
+  height: 100%;
+}
