@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import Terminal from "./Terminal";
-import { getSocket } from "../sockets/socket"; // Import getSocket
+import { getSocket } from "../sockets/socket";
 
 export default function CodeEditor({
   code,
@@ -11,33 +11,17 @@ export default function CodeEditor({
   hideTerminal = false,
   hideHeader = false,
   roomId = null,
+  user, // Add user prop
 }) {
   const editorRef = useRef(null);
   const socketRef = useRef(null);
   const isLocalChange = useRef(false);
-  const hasJoined = useRef(false);
 
   useEffect(() => {
     if (!roomId) return;
 
-    const socket = getSocket(); // Use getSocket
+    const socket = getSocket();
     socketRef.current = socket;
-
-    const handleConnect = () => {
-      console.log("Code editor socket connected:", socket.id);
-      if (!hasJoined.current) {
-        socket.emit("join-room", {
-          roomId,
-          username: `CodeEditor-${Date.now()}`,
-        });
-        hasJoined.current = true;
-      }
-    };
-
-    const handleDisconnect = () => {
-      console.log("Code editor socket disconnected");
-      hasJoined.current = false;
-    };
 
     const handleCodeUpdate = (newCode) => {
       console.log("Received code update:", newCode);
@@ -50,17 +34,9 @@ export default function CodeEditor({
       }
     };
 
-    socket.on("connect", handleConnect);
-    socket.on("disconnect", handleDisconnect);
     socket.on("code-update", handleCodeUpdate);
 
-    if (socket.connected && !hasJoined.current) {
-      handleConnect();
-    }
-
     return () => {
-      socket.off("connect", handleConnect);
-      socket.off("disconnect", handleDisconnect);
       socket.off("code-update", handleCodeUpdate);
     };
   }, [roomId, onChange]);

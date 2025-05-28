@@ -15,11 +15,15 @@ export default function ChatPanel({ roomId, user, style }) {
   const hasJoined = useRef(false);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -40,7 +44,8 @@ export default function ChatPanel({ roomId, user, style }) {
       console.log("Chat socket connected:", socket.id);
       setIsConnected(true);
       if (!hasJoined.current) {
-        socket.emit("join-room", { roomId, username: user });
+        const validUsername = user.trim() && !user.includes("CodeEditor") ? user : `Guest-${Math.random().toString(36).substr(2, 5)}`;
+        socket.emit("join-room", { roomId, username: validUsername });
         setTimeout(() => {
           socket.emit("get-users", roomId);
           socket.emit("get-room-state", { roomId });
@@ -149,7 +154,7 @@ export default function ChatPanel({ roomId, user, style }) {
       "from-emerald-400 to-teal-400",
       "from-orange-400 to-red-400",
     ];
-    const hash = username.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
+    const hash = (username || "Guest").split("").reduce((a, b) => a + b.charCodeAt(0), 0);
     return colors[hash % colors.length];
   };
 
@@ -221,12 +226,14 @@ export default function ChatPanel({ roomId, user, style }) {
                       className={`w-8 h-8 rounded-full bg-gradient-to-br ${getAvatarColor(participant.username)} flex items-center justify-center shadow-sm flex-shrink-0`}
                     >
                       <span className="text-white text-xs font-semibold">
-                        {participant.username.charAt(0).toUpperCase()}
+                        {(participant.username || "Guest").charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-800 truncate">
-                        {participant.username === user ? `${participant.username} (You)` : participant.username}
+                        {participant.username === user
+                          ? `${participant.username || "Guest"} (You)`
+                          : participant.username || `Guest-${participant.id.slice(0, 5)}`}
                       </p>
                       <div className="flex items-center gap-1 mt-0.5">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -242,9 +249,9 @@ export default function ChatPanel({ roomId, user, style }) {
       )}
 
       {/* Messages Area - Takes up remaining space */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0 scrollbar-gutter-stable">
         {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-end h-full pb-4">
             <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-3">
               <svg
                 className="w-8 h-8 text-indigo-400"
@@ -277,13 +284,13 @@ export default function ChatPanel({ roomId, user, style }) {
                   )} flex-shrink-0 flex items-center justify-center shadow-sm`}
                 >
                   <span className="text-white text-xs font-semibold">
-                    {msg.user.charAt(0).toUpperCase()}
+                    {(msg.user || "Guest").charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className="text-xs font-semibold text-gray-800 truncate">
-                      {msg.user === user ? "You" : msg.user}
+                      {msg.user === user ? "You" : msg.user || "Guest"}
                     </span>
                     <span className="text-[10px] text-gray-400 flex-shrink-0">
                       {msg.time}
@@ -339,7 +346,7 @@ export default function ChatPanel({ roomId, user, style }) {
 
         {/* Connection Status */}
         <div className="h-4 mt-2 flex items-center">
-          <span className="text-[10px] text-gray-400 font-medium">
+          <span className="text-[10px] text-gray-400 font-semibold">
             {!isConnected && "Connecting to chat..."}
           </span>
         </div>
