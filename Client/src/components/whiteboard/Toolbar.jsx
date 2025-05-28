@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { 
-  MousePointer2, 
-  PenTool, 
+  MousePointer2,  
   Type, 
   Move, 
   RotateCcw, 
-  Trash2,
   ZoomIn,
   ZoomOut,
   Maximize2,

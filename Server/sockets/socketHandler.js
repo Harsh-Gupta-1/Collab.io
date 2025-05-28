@@ -42,12 +42,10 @@ const socketHandler = (io) => {
     });
 
     socket.on("get-users", (roomId) => {
-      console.log(`Getting users for room ${roomId}`);
       emitRoomUsers(roomId);
     });
 
     socket.on("send-message", ({ roomId, msg }) => {
-      console.log(`Message in room ${roomId}:`, msg);
       if (roomStates[roomId]) {
         roomStates[roomId].messages.push(msg);
       }
@@ -55,7 +53,6 @@ const socketHandler = (io) => {
     });
 
     socket.on("code-update", ({ roomId, code }) => {
-      console.log(`Code update in room ${roomId}`);
       if (roomStates[roomId]) {
         roomStates[roomId].code = code;
       }
@@ -63,7 +60,6 @@ const socketHandler = (io) => {
     });
 
     socket.on("whiteboard-update", ({ roomId, data }) => {
-      console.log(`Whiteboard update in room ${roomId}:`, data);
       if (roomStates[roomId]) {
         if (data.type === "object-added" && data.object) {
           if (!data.object.id) {
@@ -96,19 +92,16 @@ const socketHandler = (io) => {
         } else if (data.type === "full-sync" && data.canvasData) {
           roomStates[roomId].whiteboard = data.canvasData;
         }
-        console.log(`Whiteboard objects after update: ${roomStates[roomId].whiteboard.objects.length}`);
       }
       throttledEmit(roomId, data);
     });
 
     socket.on("get-room-state", ({ roomId }) => {
-      console.log(`Sending room state for ${roomId}`);
       const state = roomStates[roomId] || {
         messages: [],
         code: "",
         whiteboard: { objects: [], backgroundColor: "#ffffff" },
       };
-      console.log(`Whiteboard objects being sent: ${state.whiteboard.objects.length}`);
       socket.emit("room-state", state);
     });
 

@@ -32,10 +32,10 @@ app.use("/api/rooms", roomRoutes);
 app.use("/api/execute", executeRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Collaborative Backend Running (ESM)");
+  res.send("Backend Running!!!!");
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT;
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running!!!!`);
 });

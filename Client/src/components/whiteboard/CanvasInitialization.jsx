@@ -198,27 +198,34 @@ export default function useCanvasInitialization({
 
   // Update canvas settings
   const updateCanvasSettings = () => {
-    const canvas = fabricCanvasRef.current;
-    if (!canvas) return;
+  const canvas = fabricCanvasRef.current;
+  if (!canvas) return;
 
-    canvas.isDrawingMode = tool === 'pen';
-    canvas.selection = tool === 'select';
-    canvas.skipTargetFind = tool === 'move';
+  // Save current pan state
+  const vpt = canvas.viewportTransform.slice();
 
-    if (tool === 'pen') {
-      canvas.freeDrawingBrush.width = brushSize;
-      canvas.freeDrawingBrush.color = color;
-      canvas.freeDrawingBrush.fill = 'transparent';
-      canvas.defaultCursor = 'crosshair';
-      canvas.hoverCursor = 'crosshair';
-    } else if (tool === 'select') {
-      canvas.defaultCursor = 'default';
-      canvas.hoverCursor = 'move';
-    } else if (tool === 'move') {
-      canvas.defaultCursor = 'grab';
-      canvas.hoverCursor = 'grabbing';
-    }
-  };
+  canvas.isDrawingMode = tool === 'pen';
+  canvas.selection = tool === 'select';
+  canvas.skipTargetFind = tool === 'move';
+
+  if (tool === 'pen') {
+    canvas.freeDrawingBrush.width = brushSize;
+    canvas.freeDrawingBrush.color = color;
+    canvas.freeDrawingBrush.fill = 'transparent';
+    canvas.defaultCursor = 'crosshair';
+    canvas.hoverCursor = 'crosshair';
+  } else if (tool === 'select') {
+    canvas.defaultCursor = 'default';
+    canvas.hoverCursor = 'move';
+  } else if (tool === 'move') {
+    canvas.defaultCursor = 'grab';
+    canvas.hoverCursor = 'grabbing';
+  }
+
+  // Restore pan state
+  canvas.setViewportTransform(vpt);
+};
+
 
   useEffect(() => {
     updateCanvasSettings();
