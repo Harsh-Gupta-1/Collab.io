@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 import { toast } from "react-toastify";
 const backendURL = import.meta.env.VITE_BACKEND_URL;
-
 let globalSocket = null;
 
 export const getSocket = () => {
