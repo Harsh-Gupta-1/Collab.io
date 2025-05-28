@@ -115,7 +115,7 @@ export default function ChatPanel({ roomId, user, style }) {
 
   const sendMessage = () => {
     if (!input.trim() || !isConnected || !socketRef.current) {
-      toast.error("Cannot send message: Not connected to server", { autoClose: 3000 });
+      // toast.error("Cannot send message: Not connected to server", { autoClose: 3000 });
       return;
     }
 

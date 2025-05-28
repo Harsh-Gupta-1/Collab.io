@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getRoom } from "../api/roomAPI";
 import { getSocket, disconnectSocket } from "../sockets/socket";
-import Whiteboard from "../components/Whiteboard";
+import Whiteboard from "../components/whiteboard/Whiteboard";
 import CodeEditor from "../components/CodeEditor";
 import SplitView from "../components/SplitView";
 import ChatPanel from "../components/ChatPanel";
@@ -130,7 +130,7 @@ export default function Room() {
       setOutput(result.output || "Code executed successfully");
     } catch {
       setOutput("Error executing code");
-      toast.error("Execution failed", { autoClose: 4000 });
+      // toast.error("Execution failed", { autoClose: 4000 });
     }
   }, [codeSnippet]);
 

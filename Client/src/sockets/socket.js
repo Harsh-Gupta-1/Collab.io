@@ -16,17 +16,17 @@ export const getSocket = () => {
 
     globalSocket.on("connect", () => {
       console.log("Socket connected:", globalSocket.id);
-      toast.success("Connected to server", { autoClose: 3000 });
+      // toast.success("Connected to server", { autoClose: 3000 });
     });
 
     globalSocket.on("connect_error", (error) => {
       console.error("Socket connection error:", error.message);
-      toast.error(`Socket connection failed: ${error.message}`, { autoClose: 5000 });
+      // toast.error(`Socket connection failed: ${error.message}`, { autoClose: 5000 });
     });
 
     globalSocket.on("disconnect", (reason) => {
       console.log("Socket disconnected:", reason);
-      toast.warn(`Socket disconnected: ${reason}`, { autoClose: 5000 });
+      // toast.warn(`Socket disconnected: ${reason}`, { autoClose: 5000 });
     });
   }
   return globalSocket;
