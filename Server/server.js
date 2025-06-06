@@ -7,6 +7,8 @@ import { Server } from "socket.io";
 import connectDB from "./config/db.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import executeRoutes from "./routes/executeRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";  
 import socketHandler from "./sockets/socketHandler.js";
 
 dotenv.config();
@@ -30,7 +32,8 @@ app.use(express.json());
 // Routes
 app.use("/api/rooms", roomRoutes);
 app.use("/api/execute", executeRoutes);
-
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running!!!!");
 });

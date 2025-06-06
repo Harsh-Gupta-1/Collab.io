@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import useSocketLogic from "./SocketLogic";
-import useCanvasInitialization from "./CanvasInitialization";
+import useCanvasInitialization from "./Canvas";
 import Toolbar from "./Toolbar";
 
 export default function EnhancedWhiteboard({ roomId = "demo", canvasStateRef }) {
