@@ -9,6 +9,7 @@ import roomRoutes from "./routes/roomRoutes.js";
 import executeRoutes from "./routes/executeRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";  
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import socketHandler from "./sockets/socketHandler.js";
 
 dotenv.config();
@@ -34,6 +35,7 @@ app.use("/api/rooms", roomRoutes);
 app.use("/api/execute", executeRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/dashboard/rooms", dashboardRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running!!!!");
 });

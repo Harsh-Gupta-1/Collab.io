@@ -36,7 +36,7 @@ const protect = async (req, res, next) => {
       username: user.username,
       email: user.email
     };
-
+    console.log('Authenticated user:', req.user);
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {

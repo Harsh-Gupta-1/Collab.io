@@ -80,7 +80,6 @@ const login = async (req, res) => {
 
     // Generate token
     const token = generateToken(user._id);
-
     res.json({
       success: true,
       message: 'Login successful',

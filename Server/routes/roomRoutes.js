@@ -4,11 +4,11 @@ import {
   getRoom,
   updateRoom,
 } from "../controllers/roomController.js";
-
+import { protect } from '../middlewares/auth.js';
 const router = express.Router();
 
-router.post("/", createRoom);
-router.get("/:id", getRoom);
+router.post("/",protect, createRoom);
+router.get("/:id", protect, getRoom);
 router.put("/:id", updateRoom);
 
 export default router;
