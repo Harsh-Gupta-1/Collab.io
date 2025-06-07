@@ -66,7 +66,7 @@ export default function Navbar({
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
               <Code className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-semibold text-white">COLLAB.IO</span>
+            <span className="text-xl font-semibold text-white">CollabSpace</span>
           </div>
 
           {/* Room Info */}

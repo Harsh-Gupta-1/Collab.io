@@ -20,24 +20,6 @@ export default function CollaborativeAppIllustration() {
     return () => clearInterval(interval);
   }, []);
 
-  // Simulate new messages
-  useEffect(() => {
-    // const newMessages = [
-    //   { user: "Maya", text: "Nice animation!", color: "bg-green-500" },
-    //   { user: "Dev", text: "Socket.io is smooth", color: "bg-orange-500" },
-    //   { user: "Kim", text: "Real-time coding!", color: "bg-pink-500" },
-    // ];
-
-    // const interval = setInterval(() => {
-    //   setMessages((prev) => {
-    //     const randomMsg =
-    //       newMessages[Math.floor(Math.random() * newMessages.length)];
-    //     return [...prev.slice(-2), randomMsg];
-    //   });
-    // }, 6000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const renderCodeEditor = () => (
     <div className="bg-white border border-gray-200 rounded-lg p-4 h-full overflow-hidden">
@@ -97,11 +79,6 @@ export default function CollaborativeAppIllustration() {
     <div className="bg-white rounded-lg p-4 h-full border-2 border-gray-100">
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm font-medium text-gray-700">Whiteboard</span>
-        {/* <div className="flex space-x-2">
-          <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-          <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-          <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-        </div> */}
       </div>
 
       <div className="relative h-full">
@@ -207,11 +184,10 @@ export default function CollaborativeAppIllustration() {
             {/* Header */}
             <div className="px-4 py-3 border-b border-gray-200">
               <div className="flex items-center space-x-2">
-                {/* <MessageSquare className="w-4 h-4 text-gray-700" /> */}
+                
                 <span className="text-sm font-semibold text-gray-800">
                   Team Chat
                 </span>
-                {/* <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> */}
               </div>
             </div>
 
