@@ -166,7 +166,7 @@ export default function ChatPanel({ roomId, user, style }) {
       {/* Header - Fixed at top */}
       <div className="flex-shrink-0 px-4 py-3 border-b border-gray-200/50 bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 backdrop-blur-xl">
         <div className="flex items-center justify-between">
-          <span className="font-['Silkscreen'] text-sm tracking-wide bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="font-semibold text-sm tracking-wide bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             TEAM CHAT
           </span>
           <div className="flex items-center gap-2">

@@ -181,7 +181,7 @@ export default function Dashboard() {
             <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center">
               <Code className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-['Silkscreen'] text-gray-800">COLLAB.IO</span>
+            <span className="text-xl font-semibold text-gray-800">COLLAB.IO</span>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export default function Dashboard() {
           {/* Header */}
           <div className="mb-8">
             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-              <h1 className="text-3xl font-['Silkscreen'] text-gray-800 mb-2">
+              <h1 className="text-3xl text-gray-800 mb-2">
                 Dashboard Overview
               </h1>
               <p className="text-gray-600">Welcome back, {user.username}! Ready to collaborate?</p>
@@ -267,7 +267,7 @@ export default function Dashboard() {
           {/* Recent Rooms */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-['Silkscreen'] text-gray-800">Recent Rooms</h2>
+              <h2 className="text-xl text-gray-800">Recent Rooms</h2>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
@@ -340,7 +340,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-['Silkscreen'] text-gray-800">Create New Room</h3>
+                <h3 className="text-xl text-gray-800">Create New Room</h3>
                 <button
                   onClick={closeModals}
                   className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
@@ -390,7 +390,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-['Silkscreen'] text-gray-800">Join Existing Room</h3>
+                <h3 className="text-xl text-gray-800">Join Existing Room</h3>
                 <button
                   onClick={closeModals}
                   className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
