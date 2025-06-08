@@ -73,9 +73,9 @@ export default function Home() {
       const data = response.data;
 
       if (data.success) {
-        // Note: In a real Claude artifact, localStorage isn't available
-        // localStorage.setItem('token', data.token);
-        // localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        console.log("Login successful:", data);
         toast.success("Login successful!");
         navigate("/dashboard");
       } else {
