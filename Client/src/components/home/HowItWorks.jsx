@@ -19,7 +19,7 @@ export default function HowItWorksSection() {
     {
       icon: Zap,
       title: "3. Collaborate Live",
-      description: "Work together in real-time with live cursors, instant sync, and seamless communication.",
+      description: "Work together in real-time with instant sync and seamless communication.",
       bgColor: "bg-purple-100",
       iconColor: "text-purple-600"
     }

@@ -5,10 +5,10 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getRoom } from "../api/roomAPI";
 import { getSocket, disconnectSocket } from "../sockets/socket";
 import Whiteboard from "../components/whiteboard/Whiteboard";
-import CodeEditor from "../components/CodeEditor";
-import SplitView from "../components/SplitView";
-import ChatPanel from "../components/ChatPanel";
-import Navbar from "../components/Navbar";
+import CodeEditor from "../components/room/CodeEditor";
+import SplitView from "../components/room/SplitView";
+import ChatPanel from "../components/room/ChatPanel";
+import Navbar from "../components/room/Navbar";
 import { executeCode } from "../api/executeAPI";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,10 +30,13 @@ export default function Room() {
   const [participants, setParticipants] = useState([]);
   const hasJoinedRoom = useRef(false);
   const socketRef = useRef(null);
-
-  const userName = location.state?.name || "Guest";
-
+  
+const userName = location.state?.name;
+    
   useEffect(() => {
+    if (!userName) {
+      navigate("/");
+    }
     const fetchRoom = async () => {
       try {
         const room = await getRoom(id);

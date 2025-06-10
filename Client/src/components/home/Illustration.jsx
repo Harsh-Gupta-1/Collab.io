@@ -118,8 +118,8 @@ export default function CollaborativeAppIllustration() {
 
   const renderSplitView = () => (
     <div className="h-full flex space-x-2">
-      <div className="w-1/2">{renderCodeEditor()}</div>
       <div className="w-1/2">{renderWhiteboard()}</div>
+      <div className="w-1/2">{renderCodeEditor()}</div>
     </div>
   );
 
@@ -131,7 +131,7 @@ export default function CollaborativeAppIllustration() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <span className="text-white font-bold text-lg">Collab.io</span>
+                <span className="text-white font-bold text-lg">CollabSpace</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/20 rounded-full px-3 py-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -140,8 +140,8 @@ export default function CollaborativeAppIllustration() {
             </div>
             <div className="flex space-x-4">
               {[
-                { id: "code", label: "Code" },
                 { id: "whiteboard", label: "Draw" },
+                { id: "code", label: "Code" },
                 { id: "split", label: "Both" },
               ].map(({ id, label, icon: Icon }) => (
                 <button
@@ -241,7 +241,7 @@ export default function CollaborativeAppIllustration() {
 
       {/* Floating Animation Elements */}
       <div className="absolute -top-6 -right-6 w-12 h-12 bg-purple-300 rounded-full opacity-60 animate-bounce"></div>
-      <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-indigo-300 rounded-full opacity-40 animate-pulse"></div>
+      <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-indigo-300 rounded-full opacity-40 animate-bounce"></div>
 
       <style
         dangerouslySetInnerHTML={{

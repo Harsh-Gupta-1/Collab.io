@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import Terminal from "./Terminal";
-import { getSocket } from "../sockets/socket";
+import { getSocket } from "../../sockets/socket";
 
 export default function CodeEditor({
   code,

@@ -1,10 +1,10 @@
-import { 
-  PenTool, 
-  Code, 
-  MessageSquare, 
-  Share2, 
-  Layers, 
-  Shield 
+import {
+  PenTool,
+  Code,
+  MessageSquare,
+  Share2,
+  Layers,
+  Shield
 } from "lucide-react";
 
 export default function FeaturesSection() {
@@ -20,7 +20,7 @@ export default function FeaturesSection() {
     {
       icon: Code,
       title: "Live Code Editor",
-      description: "Write code together with syntax highlighting, real-time editing, and instant synchronization.",
+      description: "Write JavaScript code together with syntax highlighting and real-time editing. More languages coming soon!",
       gradient: "from-blue-50 to-purple-50",
       border: "border-blue-100",
       iconColor: "text-blue-600"
@@ -77,7 +77,7 @@ export default function FeaturesSection() {
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <div 
+              <div
                 key={index}
                 className={`bg-gradient-to-br ${feature.gradient} p-6 rounded-xl border ${feature.border}`}
               >

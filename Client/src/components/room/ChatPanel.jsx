@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { getSocket } from "../sockets/socket";
+import { getSocket } from "../../sockets/socket";
 import { toast } from "react-toastify";
 
 export default function ChatPanel({ roomId, user, style }) {

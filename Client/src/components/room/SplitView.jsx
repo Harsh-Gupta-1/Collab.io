@@ -1,4 +1,4 @@
-import Whiteboard from "./whiteboard/Whiteboard";
+import Whiteboard from "../whiteboard/Whiteboard";
 import CodeEditor from "./CodeEditor";
 import Terminal from "./Terminal";
 import ChatPanel from "./ChatPanel";
