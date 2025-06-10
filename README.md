@@ -17,6 +17,7 @@ A real-time collaborative platform that enables teams to work together seamlessl
 
 ### 🎨 Interactive Whiteboard
 - **Drawing Tools**: Pencil tool for freehand drawing
+- **Text Tool**: Add and edit text directly on the whiteboard
 - **Shapes**: Circle, rectangle, and triangle tools
 - **Selection Tools**: 
   - Select and move objects
