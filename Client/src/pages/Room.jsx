@@ -140,7 +140,7 @@ const userName = location.state?.name;
   const handleLeave = useCallback(() => {
     socketRef.current?.emit("leave-room", { roomId: id, username: userName });
     disconnectSocket();
-    navigate("/");
+    navigate("/dashboard");
   }, [id, userName, navigate]);
 
   const handleSendMessage = useCallback(
