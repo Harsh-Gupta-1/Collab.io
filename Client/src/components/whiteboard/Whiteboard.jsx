@@ -10,8 +10,8 @@ export default function EnhancedWhiteboard({ roomId = "demo", canvasStateRef }) 
   const undoStackRef = useRef([]);
   const redoStackRef = useRef([]);
 
-  // State management
-  const [tool, setTool] = useState("select");
+  // State management - Default tool is now "pen"
+  const [tool, setTool] = useState("pen");
   const [color, setColor] = useState("#4f46e5");
   const [brushSize, setBrushSize] = useState(3);
   const [zoom, setZoom] = useState(100);
@@ -43,6 +43,16 @@ export default function EnhancedWhiteboard({ roomId = "demo", canvasStateRef }) 
   // Initialize socket logic
   useSocketLogic({ roomId, fabricCanvasRef, isLoadingRef, saveCanvasState });
 
+  // Enhanced shape adding function that includes setTool
+  const handleAddShape = (shapeType) => {
+    addShape(shapeType, setTool);
+  };
+
+  // Enhanced text adding function that includes setTool
+  const handleAddText = () => {
+    addText(setTool);
+  };
+
   return (
     <div className="relative w-full h-full overflow-hidden bg-gradient-to-br from-white via-indigo-50/30 to-purple-50/20">
       {/* Canvas */}
@@ -50,9 +60,10 @@ export default function EnhancedWhiteboard({ roomId = "demo", canvasStateRef }) 
 
       {/* Toolbar */}
       <Toolbar
+        tool={tool}
         setTool={setTool}
-        addShape={addShape}
-        addText={addText}
+        addShape={handleAddShape}
+        addText={handleAddText}
         deleteSelected={deleteSelected}
         undo={undo}
         clearCanvas={clearCanvas}

@@ -14,6 +14,7 @@ export default function useCanvasInitialization({
 }) {
   const isPanningRef = useRef(false);
   const lastPanPointRef = useRef({ x: 0, y: 0 });
+  const viewportTransformRef = useRef([1, 0, 0, 1, 0, 0]); // Store persistent viewport transform
 
   // Canvas initialization
   useEffect(() => {
@@ -43,6 +44,8 @@ export default function useCanvasInitialization({
               obj.set('stroke', obj.fill);
             }
           });
+          // Restore the viewport transform after loading
+          canvas.setViewportTransform(viewportTransformRef.current);
           canvas.renderAll();
           isLoadingRef.current = false;
         });
@@ -78,6 +81,9 @@ export default function useCanvasInitialization({
         vpt[5] += deltaY / canvas.getZoom();
         canvas.setViewportTransform(vpt);
         
+        // Update our persistent viewport transform
+        viewportTransformRef.current = vpt.slice();
+        
         lastPanPointRef.current = { x: opt.e.clientX, y: opt.e.clientY };
         opt.e.preventDefault();
         opt.e.stopPropagation();
@@ -89,6 +95,8 @@ export default function useCanvasInitialization({
         isPanningRef.current = false;
         canvas.defaultCursor = 'grab';
         canvas.selection = true;
+        // Save the final viewport transform
+        viewportTransformRef.current = canvas.viewportTransform.slice();
         opt.e.preventDefault();
         opt.e.stopPropagation();
       }
@@ -103,6 +111,10 @@ export default function useCanvasInitialization({
       if (zoom < 0.01) zoom = 0.01;
       canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       setZoom(Math.round(zoom * 100));
+      
+      // Update our persistent viewport transform after zooming
+      viewportTransformRef.current = canvas.viewportTransform.slice();
+      
       opt.e.preventDefault();
       opt.e.stopPropagation();
     });
@@ -134,6 +146,9 @@ export default function useCanvasInitialization({
           
           canvas.zoomToPoint({ x: center.x, y: center.y }, zoom);
           setZoom(Math.round(zoom * 100));
+          
+          // Update our persistent viewport transform after touch zoom
+          viewportTransformRef.current = canvas.viewportTransform.slice();
         }
 
         lastTouchDistance = distance;
@@ -169,6 +184,8 @@ export default function useCanvasInitialization({
                 obj.set('stroke', obj.fill);
               }
             });
+            // Restore the viewport transform after loading
+            canvas.setViewportTransform(viewportTransformRef.current);
             canvas.renderAll();
             isLoadingRef.current = false;
           });
@@ -196,45 +213,46 @@ export default function useCanvasInitialization({
     };
   }, [tool]);
 
-  // Update canvas settings
+  // Update canvas settings - FIXED VERSION
   const updateCanvasSettings = () => {
-  const canvas = fabricCanvasRef.current;
-  if (!canvas) return;
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
-  // Save current pan state
-  const vpt = canvas.viewportTransform.slice();
+    // DON'T save/restore viewport transform here - use our persistent reference
+    canvas.isDrawingMode = tool === 'pen';
+    canvas.selection = tool === 'select';
+    canvas.skipTargetFind = tool === 'move';
 
-  canvas.isDrawingMode = tool === 'pen';
-  canvas.selection = tool === 'select';
-  canvas.skipTargetFind = tool === 'move';
+    if (tool === 'pen') {
+      canvas.freeDrawingBrush.width = brushSize;
+      canvas.freeDrawingBrush.color = color;
+      canvas.freeDrawingBrush.fill = 'transparent';
+      canvas.defaultCursor = 'crosshair';
+      canvas.hoverCursor = 'crosshair';
+    } else if (tool === 'select') {
+      canvas.defaultCursor = 'default';
+      canvas.hoverCursor = 'move';
+    } else if (tool === 'move') {
+      canvas.defaultCursor = 'grab';
+      canvas.hoverCursor = 'grabbing';
+    }
 
-  if (tool === 'pen') {
-    canvas.freeDrawingBrush.width = brushSize;
-    canvas.freeDrawingBrush.color = color;
-    canvas.freeDrawingBrush.fill = 'transparent';
-    canvas.defaultCursor = 'crosshair';
-    canvas.hoverCursor = 'crosshair';
-  } else if (tool === 'select') {
-    canvas.defaultCursor = 'default';
-    canvas.hoverCursor = 'move';
-  } else if (tool === 'move') {
-    canvas.defaultCursor = 'grab';
-    canvas.hoverCursor = 'grabbing';
-  }
-
-  // Restore pan state
-  canvas.setViewportTransform(vpt);
-};
-
+    // Always ensure the viewport transform is maintained
+    canvas.setViewportTransform(viewportTransformRef.current);
+    canvas.renderAll();
+  };
 
   useEffect(() => {
     updateCanvasSettings();
   }, [tool, color, brushSize]);
 
-  // Canvas state management
+  // Canvas state management - MODIFIED to preserve viewport
   const saveCanvasState = () => {
     const canvas = fabricCanvasRef.current;
     if (!canvas || isLoadingRef.current) return;
+
+    // Save current viewport transform before saving state
+    viewportTransformRef.current = canvas.viewportTransform.slice();
 
     const state = JSON.stringify(canvas.toJSON(['id']));
     undoStackRef.current.push(state);
@@ -249,14 +267,24 @@ export default function useCanvasInitialization({
   };
 
   // Tool functions
-  const addShape = (shapeType) => {
+  const addShape = (shapeType, setTool) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    // Calculate center of current viewport
+    const vpt = canvas.viewportTransform;
+    const zoom = canvas.getZoom();
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    
+    // Get the center point of the visible area in canvas coordinates
+    const centerX = (-vpt[4] + canvasWidth / 2) / zoom;
+    const centerY = (-vpt[5] + canvasHeight / 2) / zoom;
+
     let shape;
     const shapeProps = {
-      left: 100,
-      top: 100,
+      left: centerX - 50, // Center the shape by offsetting by half its size
+      top: centerY - 50,
       fill: 'transparent',
       stroke: color,
       strokeWidth: 2,
@@ -268,7 +296,7 @@ export default function useCanvasInitialization({
         shape = new fabric.Rect({ ...shapeProps, width: 100, height: 100 });
         break;
       case 'circle':
-        shape = new fabric.Circle({ ...shapeProps, radius: 50 });
+        shape = new fabric.Circle({ ...shapeProps, radius: 50, left: centerX - 50, top: centerY - 50 });
         break;
       case 'triangle':
         shape = new fabric.Triangle({ ...shapeProps, width: 100, height: 100 });
@@ -278,16 +306,31 @@ export default function useCanvasInitialization({
     if (shape) {
       canvas.add(shape);
       canvas.setActiveObject(shape);
+      
+      // Automatically switch to select tool after placing shape
+      if (setTool) {
+        setTool('select');
+      }
     }
   };
 
-  const addText = () => {
+  const addText = (setTool) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    // Calculate center of current viewport
+    const vpt = canvas.viewportTransform;
+    const zoom = canvas.getZoom();
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    
+    // Get the center point of the visible area in canvas coordinates
+    const centerX = (-vpt[4] + canvasWidth / 2) / zoom;
+    const centerY = (-vpt[5] + canvasHeight / 2) / zoom;
+
     const text = new fabric.IText('Click to edit', {
-      left: 100,
-      top: 100,
+      left: centerX - 50, // Approximate centering for text
+      top: centerY - 10,
       fontSize: 20,
       fill: color,
       id: `text_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
@@ -295,6 +338,11 @@ export default function useCanvasInitialization({
     
     canvas.add(text);
     canvas.setActiveObject(text);
+    
+    // Automatically switch to select tool after placing text
+    if (setTool) {
+      setTool('select');
+    }
   };
 
   const deleteSelected = () => {
@@ -318,6 +366,8 @@ export default function useCanvasInitialization({
     if (previousState) {
       isLoadingRef.current = true;
       canvas.loadFromJSON(previousState, () => {
+        // Restore viewport transform after undo
+        canvas.setViewportTransform(viewportTransformRef.current);
         canvas.renderAll();
         isLoadingRef.current = false;
       });
@@ -330,6 +380,8 @@ export default function useCanvasInitialization({
 
     canvas.clear();
     canvas.backgroundColor = '#ffffff';
+    // Preserve viewport transform when clearing
+    canvas.setViewportTransform(viewportTransformRef.current);
     canvas.renderAll();
     
     const canvasData = {
@@ -347,6 +399,8 @@ export default function useCanvasInitialization({
 
     canvas.setZoom(1);
     canvas.absolutePan({ x: 0, y: 0 });
+    // Update our persistent viewport transform
+    viewportTransformRef.current = [1, 0, 0, 1, 0, 0];
     setZoom(100);
   };
 
@@ -357,6 +411,8 @@ export default function useCanvasInitialization({
     let zoom = canvas.getZoom() * 1.1;
     if (zoom > 20) zoom = 20;
     canvas.setZoom(zoom);
+    // Update our persistent viewport transform
+    viewportTransformRef.current = canvas.viewportTransform.slice();
     setZoom(Math.round(zoom * 100));
   };
 
@@ -367,6 +423,8 @@ export default function useCanvasInitialization({
     let zoom = canvas.getZoom() * 0.9;
     if (zoom < 0.01) zoom = 0.01;
     canvas.setZoom(zoom);
+    // Update our persistent viewport transform
+    viewportTransformRef.current = canvas.viewportTransform.slice();
     setZoom(Math.round(zoom * 100));
   };
 

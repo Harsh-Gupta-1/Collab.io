@@ -38,32 +38,26 @@ export default function Navbar({
   const modeConfig = {
     whiteboard: {
       icon: PenTool,
-      label: "Draw",
-      color: "from-pink-500 to-rose-500",
-      hoverColor: "hover:from-pink-600 hover:to-rose-600"
+      label: "Draw"
     },
     code: {
       icon: Code,
-      label: "Code",
-      color: "from-blue-500 to-indigo-500",
-      hoverColor: "hover:from-blue-600 hover:to-indigo-600"
+      label: "Code"
     },
     split: {
       icon: Layers,
-      label: "Both",
-      color: "from-purple-500 to-indigo-500",
-      hoverColor: "hover:from-purple-600 hover:to-indigo-600"
+      label: "Both"
     }
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 border-b border-indigo-700/30">
+    <div className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 border-b border-indigo-700/30 shadow-lg">
       <div className="px-6 py-3 flex justify-between items-center">
         {/* Left Section - Brand & Room Info */}
         <div className="flex items-center gap-6">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center border border-white/30 backdrop-blur-sm">
               <Code className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-semibold text-white">CollabSpace</span>
@@ -71,7 +65,7 @@ export default function Navbar({
 
           {/* Room Info */}
           <div className="flex items-center gap-3">
-            <div className="bg-white/10 border border-white/20 px-4 py-2 rounded-xl backdrop-blur-sm">
+            <div className="bg-white/15 border border-white/25 px-4 py-2.5 rounded-xl backdrop-blur-md">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-indigo-200">Room:</span>
                 <span className="text-sm font-bold text-white">{roomName}</span>
@@ -81,7 +75,7 @@ export default function Navbar({
             {/* Share Button */}
             <button
               onClick={handleCopyId}
-              className="bg-white/10 hover:bg-white/20 text-white p-2.5 rounded-xl border border-white/20 hover:border-white/40 transform hover:-translate-y-0.5 transition-all duration-200 group"
+              className="bg-white/15 hover:bg-white/25 text-white p-2.5 rounded-xl border border-white/25 hover:border-white/40 transform hover:-translate-y-0.5 transition-all duration-200 group backdrop-blur-md"
               title="Copy Room ID to share"
             >
               {copied ? (
@@ -92,7 +86,7 @@ export default function Navbar({
             </button>
 
             {/* Connection Status */}
-            <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg border border-white/20">
+            <div className="flex items-center gap-2 bg-white/15 px-3 py-2.5 rounded-xl border border-white/25 backdrop-blur-md">
               <div
                 className={`w-2 h-2 rounded-full ${
                   isConnected ? "bg-emerald-400 animate-pulse" : "bg-red-400"
@@ -105,8 +99,8 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Center Section - Mode Switcher */}
-        <div className="flex items-center bg-white/10 p-1.5 rounded-xl border border-white/20 gap-1.5">
+        {/* Center Section - Separate Mode Capsules */}
+        <div className="flex items-center gap-3">
           {Object.entries(modeConfig).map(([modeKey, config]) => {
             const Icon = config.icon;
             const isActive = mode === modeKey;
@@ -114,10 +108,10 @@ export default function Navbar({
               <button
                 key={modeKey}
                 onClick={() => onModeChange(modeKey)}
-                className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 border backdrop-blur-md ${
                   isActive
-                    ? `bg-white/20 text-white border border-white/30`
-                    : `text-indigo-200 hover:text-white hover:bg-white/15`
+                    ? 'bg-white text-gray-700 shadow-sm border-white/30'
+                    : 'text-white/80 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -130,13 +124,13 @@ export default function Navbar({
         {/* Right Section - User & Actions */}
         <div className="flex items-center gap-4">
           {/* User Profile */}
-          <div className="flex items-center gap-3 bg-white/10 border border-white/20 px-4 py-2 rounded-xl backdrop-blur-sm">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-500 rounded-full flex items-center justify-center ring-2 ring-white/20">
-              <span className="text-white text-sm font-bold">
+          <div className="flex items-center gap-2 bg-white/15 border border-white/25 px-3 py-2 rounded-xl backdrop-blur-md">
+            <div className="w-7 h-7 bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-500 rounded-full flex items-center justify-center shadow-sm">
+              <span className="text-white text-xs font-semibold">
                 {userName.charAt(0).toUpperCase()}
               </span>
             </div>
-            <span className="text-sm font-medium text-white max-w-[120px] truncate">
+            <span className="text-sm font-medium text-white max-w-[100px] truncate">
               {userName}
             </span>
           </div>
@@ -144,10 +138,10 @@ export default function Navbar({
           {/* Leave Button */}
           <button
             onClick={onLeave}
-            className="bg-gradient-to-r from-red-500/90 to-rose-500/90 hover:from-red-500 hover:to-rose-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 transform hover:-translate-y-0.5 flex items-center gap-2 border border-red-400/40"
+            className="bg-red-500/80 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 border border-red-400/30 hover:border-red-400/50 backdrop-blur-sm"
           >
             <LogOut className="w-4 h-4" />
-            Leave Room
+            Leave
           </button>
         </div>
       </div>

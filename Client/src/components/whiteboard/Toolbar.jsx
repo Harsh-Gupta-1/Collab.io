@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 export default function Toolbar({ 
+  tool, // Now receiving tool as prop
   setTool, 
   addShape, 
   addText, 
@@ -28,18 +29,27 @@ export default function Toolbar({
 }) {
   const [showShapes, setShowShapes] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [tool, setLocalTool] = useState("select");
 
   // Color palette
   const colors = [
-    "#4f46e5", "#dc2626", "#059669", "#d97706", 
-    "#7c3aed", "#db2777", "#000000", "#6b7280"
-  ];
+   "#4f46e5", "#ff3b30", "#00d4aa", "#ff9500", 
+   "#bf5af2", "#ff2d92", "#1d1d1f", "#34c759"
+];
 
   // Handle tool change
   const handleToolChange = (newTool) => {
-    setLocalTool(newTool);
     setTool(newTool);
+  };
+
+  // Handle shape addition with automatic tool switching
+  const handleShapeAdd = (shapeType) => {
+    addShape(shapeType);
+    setShowShapes(false); // Close the shapes dropdown
+  };
+
+  // Handle text addition with automatic tool switching
+  const handleTextAdd = () => {
+    addText();
   };
 
   return (
@@ -139,9 +149,27 @@ export default function Toolbar({
               {showShapes && (
                 <div className="absolute bottom-full mb-2 left-0 bg-white/90 backdrop-blur-sm border border-indigo-200/50 rounded-2xl shadow-lg p-3">
                   <div className="flex gap-2">
-                    <button onClick={() => addShape('rect')} className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg">⬜</button>
-                    <button onClick={() => addShape('circle')} className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg">⭕</button>
-                    <button onClick={() => addShape('triangle')} className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg">🔺</button>
+                    <button 
+                      onClick={() => handleShapeAdd('rect')} 
+                      className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg"
+                      title="Rectangle"
+                    >
+                      ⬜
+                    </button>
+                    <button 
+                      onClick={() => handleShapeAdd('circle')} 
+                      className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg"
+                      title="Circle"
+                    >
+                      ⭕
+                    </button>
+                    <button 
+                      onClick={() => handleShapeAdd('triangle')} 
+                      className="w-8 h-8 hover:bg-gray-100 rounded-lg flex items-center justify-center text-lg"
+                      title="Triangle"
+                    >
+                      🔺
+                    </button>
                   </div>
                 </div>
               )}
@@ -149,9 +177,9 @@ export default function Toolbar({
 
             {/* Text Tool */}
             <button
-              onClick={addText}
+              onClick={handleTextAdd}
               className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-all text-gray-600"
-              title="Text"
+              title="Text (Auto-switches to select tool)"
             >
               <Type className="w-4 h-4" />
             </button>
@@ -172,25 +200,12 @@ export default function Toolbar({
             {/* Separator */}
             <div className="w-px h-6 bg-gray-300"></div>
 
-            {/* Settings (Color & Brush Size) */}
-            <button
-              onClick={() => setShowSettings(!showSettings)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                showSettings 
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg' 
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-              }`}
-              title="Settings"
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-
             {/* Current Color Indicator */}
             <div
               className="w-10 h-10 rounded-xl border-2 border-white shadow-md cursor-pointer"
               style={{ backgroundColor: color }}
               onClick={() => setShowSettings(!showSettings)}
-              title="Current Color"
+              title="Current Color & Settings"
             />
 
             {/* Separator */}
@@ -212,15 +227,6 @@ export default function Toolbar({
               title="Delete Selected"
             >
               🗑️
-            </button>
-
-            {/* Undo */}
-            <button
-              onClick={undo}
-              className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-all text-gray-600"
-              title="Undo"
-            >
-              <RotateCcw className="w-4 h-4" />
             </button>
 
             {/* Clear Canvas */}

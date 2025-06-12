@@ -1,3 +1,4 @@
+import { Terminal as TerminalIcon } from "lucide-react";
 export default function Terminal({ output }) {
   const safeOutput = output || "";
 
@@ -6,6 +7,7 @@ export default function Terminal({ output }) {
       {/* Terminal Header */}
       <div className="flex items-center justify-between px-4 py-2 bg-gray-200 border-b border-gray-300">
         <div className="flex items-center gap-3">
+          <TerminalIcon className="w-4 h-4 text-gray-600" />
           <span className="text-gray-700 font-medium text-sm">TERMINAL</span>
         </div>
         <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
